@@ -63,6 +63,8 @@ The records are created within a pipeline, also in [my_app/app.py](my_app/app.py
 
 Running your pipeline in Python is as easy as running the script file directly.
 
+The schema (schema-name) and table (table-name) will be created if they don't exist.
+
 ```sh
 # You can run the script file directly.
 python main.py \
