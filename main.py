@@ -25,7 +25,12 @@ if __name__ == "__main__":
     )
     args, beam_args = parser.parse_known_args()
 
-    beam_options = PipelineOptions(save_main_session=True, setup_file="./setup.py")
+    beam_options = PipelineOptions(
+        save_main_session=True,
+        setup_file="./setup.py",
+        direct_num_workers=1,  # Set the number of workers to 1 for debugging
+        direct_running_mode='in_memory'  # Use in-memory mode for debugging
+    )
     app.run(
         input_text=args.input_text,
         beam_options=beam_options,

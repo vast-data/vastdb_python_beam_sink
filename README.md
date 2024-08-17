@@ -1,4 +1,4 @@
-# Apache Beam starter for Python
+# Apache Beam starter for Python with VastDB
 
 If you want to clone this repository to start your own project,
 you can choose the license you prefer and feel free to delete anything related to the license you are dropping.
@@ -42,37 +42,4 @@ Running your pipeline in Python is as easy as running the script file directly.
 # You can run the script file directly.
 python main.py
 
-# To run passing command line arguments.
-python main.py --input-text="🎉"
-
-# To run the tests.
-python -m unittest -v
 ```
-
-## GitHub Actions automated testing
-
-This project already comes with automated testing via [GitHub Actions](https://github.com/features/actions).
-
-To configure it, look at the [`.github/workflows/test.yaml`](.github/workflows/test.yaml) file.
-
-## Using other runners
-
-To keep this template small, it only includes the [Direct Runner](https://beam.apache.org/documentation/runners/direct/).
-
-For a comparison of what each runner currently supports, look at the [Beam Capability Matrix](https://beam.apache.org/documentation/runners/capability-matrix/).
-
-To add a new runner, visit the runner's page for instructions on how to include it.
-
-## Contributing
-
-Thank you for your interest in contributing!
-All contributions are welcome! 🎉🎊
-
-Please refer to the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for more information.
-
-# License
-
-This software is distributed under the terms of both the MIT license and the
-Apache License (Version 2.0).
-
-See [LICENSE](LICENSE) for details.
