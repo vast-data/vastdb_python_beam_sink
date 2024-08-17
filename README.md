@@ -38,7 +38,7 @@ pip install -e .
 
 Currently, this MVP creates two hard-coded records.
 
-The schema is defined in `my_app/app.py`:
+The schema is defined in [my_app/app.py](my_app/app.py):
 
 ```python
 'pa_schema': pa.schema([
@@ -48,7 +48,7 @@ The schema is defined in `my_app/app.py`:
     ])
 ```
 
-The records are created within a pipeline, also in `my_app/app.py`:
+The records are created within a pipeline, also in [my_app/app.py](my_app/app.py):
 
 ```python
 | "Create elements" >> beam.Create([
