@@ -10,14 +10,13 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def run(
-    input_text: str,
+    vastdb_endpoint: str,
+    vastdb_access_key_id: str,
+    vastdb_secret_access_key: str,
+    vastdb_bucket_name: str,
+    vastdb_schema_name: str,
+    vastdb_table_name: str,
     beam_options: Optional[PipelineOptions] = None,
-    vastdb_endpoint: str = "http://localhost:8080",
-    vastdb_access_key_id: str = "7XB5EJWVTRPELZHRE0D0",
-    vastdb_secret_access_key: str = "fBnyOdfw3bAjmUzcp2smbDbOm950qc4KxG/jJg1i",
-    vastdb_bucket_name: str = "vastdb",
-    vastdb_schema_name: str = "airbyte_demo",
-    vastdb_table_name: str = "beam4",
     test: Callable[[beam.PCollection], None] = lambda _: None,
 ) -> None:
     with beam.Pipeline(options=beam_options) as pipeline:

@@ -34,12 +34,21 @@ pip install -e .
 
 > ℹ️ Once you are done, you can run the `deactivate` command to go back to your global Python installation.
 
+### Edit the Vast DB Endpoint configuration
+
+
+
 ### Running the pipeline
 
 Running your pipeline in Python is as easy as running the script file directly.
 
 ```sh
 # You can run the script file directly.
-python main.py
-
+python main.py \
+    --vastdb-endpoint="http://your_endpoint" \
+    --vastdb-access-key-id="your_access_key" \
+    --vastdb-secret-access-key="your_secret_key" \
+    --vastdb-bucket-name="vastdb" \
+    --vastdb-schema-name="vastschema" \
+    --vastdb-table-name="your_table_name"
 ```
