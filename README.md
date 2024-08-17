@@ -3,6 +3,8 @@
 If you want to clone this repository to start your own project,
 you can choose the license you prefer and feel free to delete anything related to the license you are dropping.
 
+This project is based on [apache/beam-starter-python](https://github.com/apache/beam-starter-python)
+
 ## Before you begin
 
 Make sure you have a [Python 3](https://www.python.org/) development environment ready.
