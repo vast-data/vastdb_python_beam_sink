@@ -34,9 +34,28 @@ pip install -e .
 
 > ℹ️ Once you are done, you can run the `deactivate` command to go back to your global Python installation.
 
-### Edit the Vast DB Endpoint configuration
+### Edit the Vast DB source
 
+Currently, this MVP creates two hard-coded records.
 
+The schema is defined in `my_app/app.py`:
+
+```python
+'pa_schema': pa.schema([
+    ('id', pa.int64()),
+    ('first_name', pa.utf8()),
+    ('last_name', pa.utf8())
+    ])
+```
+
+The records are created within a pipeline, also in `my_app/app.py`:
+
+```python
+| "Create elements" >> beam.Create([
+    { 'id': 1, 'first_name': 'John', 'last_name': 'Doe' },
+    { 'id': 2, 'first_name': 'Jane', 'last_name': 'Doe' }
+    ])
+```
 
 ### Running the pipeline
 
