@@ -7,8 +7,9 @@ import pyarrow as pa
 import apache_beam.typehints.schemas as schemas
 
 class VastDBSink(beam.PTransform):
-    def __init__(self, endpoint, access_key_id, secret_access_key, bucket_name, schema_name, table_name, pa_schema):
+    def __init__(self, batch_size, endpoint, access_key_id, secret_access_key, bucket_name, schema_name, table_name, pa_schema):
         super().__init__()
+        self.batch_size = batch_size
         self.endpoint = endpoint
         self.access_key_id = access_key_id
         self.secret_access_key = secret_access_key
@@ -54,17 +55,25 @@ class VastDBSink(beam.PTransform):
     def create_pyarrow_table(self, beam_batch, pa_schema: pa.schema) -> pa.Table:
         self.logger.debug(f'Creating PyArrow table from Beam batch {beam_batch}')
         
-        if isinstance(beam_batch, set):
-            colnames = pa_schema.names
-            beam_list = list(beam_batch)
-            beam_batch = {colnames[i]: value for i, value in enumerate(beam_list)}
+        colnames = pa_schema.names
+        if isinstance(beam_batch, tuple):
+                id, value_list = beam_batch
+                if isinstance(value_list, list) and len(value_list) == 1 and isinstance(value_list[0], dict):
+                    value_dict = value_list[0]
+                    beam_batch = {colnames[i]: value_dict.get(colnames[i], None) for i in range(len(colnames))}
+                    beam_batch['id'] = id
+                else:
+                    raise ValueError(f'Unexpected value format in tuple: {value_list}')
+        elif isinstance(beam_batch, set):
+                beam_list = list(beam_batch)
+                beam_batch = {colnames[i]: value for i, value in enumerate(beam_list)}
         elif isinstance(beam_batch, dict):
-            # no need to convert
-            pass
+                # no need to convert
+                pass
         else:
-            raise ValueError(f'Unsupported Beam batch type {type(beam_batch)}')
-        
-        pa_table = pa.Table.from_struct_array(pa.array([beam_batch]))
+                raise ValueError(f'Unsupported Beam batch type {type(beam_batch)}')
+            
+        pa_table = pa.Table.from_pylist([beam_batch], schema=pa_schema)
         self.logger.debug(f'Created PyArrow table: {pa_table}')
         return pa_table
 

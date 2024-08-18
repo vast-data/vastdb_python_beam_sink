@@ -20,36 +20,32 @@ def run(
     beam_options: Optional[PipelineOptions] = None,
     test: Callable[[beam.PCollection], None] = lambda _: None,
 ) -> None:
+    
+    vast_table_config = {
+        'endpoint': vastdb_endpoint,
+        'access_key_id': vastdb_access_key_id,
+        'secret_access_key': vastdb_secret_access_key,
+        'bucket_name': vastdb_bucket_name,
+        'schema_name': vastdb_schema_name,
+        'table_name': vastdb_table_name,
+        'pa_schema': pa.schema([
+            ('id', pa.int64()),
+            ('first_name', pa.utf8()),
+            ('last_name', pa.utf8())
+            ])
+    }
+    
     with beam.Pipeline(options=beam_options) as pipeline:
-
-        window_size = 100
-        vast_table_config = {
-            'endpoint': vastdb_endpoint,
-            'access_key_id': vastdb_access_key_id,
-            'secret_access_key': vastdb_secret_access_key,
-            'bucket_name': vastdb_bucket_name,
-            'schema_name': vastdb_schema_name,
-            'table_name': vastdb_table_name,
-            'pa_schema': pa.schema([
-                ('id', pa.int64()),
-                ('first_name', pa.utf8()),
-                ('last_name', pa.utf8())
-                ])
-        }
-
+        
+        batch_size = 3
         elements = (
             pipeline
             | "Create elements" >> beam.Create([
-                { 'id': 1, 'first_name': 'John', 'last_name': 'Doe' },
-                { 'id': 2, 'first_name': 'Jane', 'last_name': 'Doe' }
+                (1, {'first_name': 'John', 'last_name': 'Doe' }),
+                (2, {'first_name': 'Jane', 'last_name': 'Doe' }),
                 ])
-            | "Make Batches" >> beam.WindowInto(
-                    beam.window.FixedWindows(window_size), 
-                    trigger=beam.trigger.AfterWatermark(), 
-                    accumulation_mode=beam.transforms.trigger.AccumulationMode.DISCARDING
-                    )
-            # | "Log Before Sink" >> beam.Map(lambda x: (logger.info(f'Element before sink: {x}') or x))
-            | "Write To VastDB" >> VastDBSink(**vast_table_config)
+            | "Group into batches" >> beam.GroupIntoBatches(batch_size)
+            | "Write To VastDB" >> VastDBSink(batch_size, **vast_table_config)
         )
 
         # Used for testing only.
