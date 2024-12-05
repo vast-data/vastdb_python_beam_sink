@@ -1,2 +1,2 @@
 apache-beam==2.58.0
-vastdb==v1.1.1
+vastdb==v1.3.3
